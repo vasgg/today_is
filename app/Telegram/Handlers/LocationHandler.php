@@ -25,7 +25,7 @@ class LocationHandler
                 "Country: $countryName ($countryCode)" . "\n" .
                 "Timezone: $timezoneId (UTC offset: $utcOffset)" . "\n",
                 ['reply_markup' => ReplyKeyboardRemove::make(true)]);
-            User::whereTelegramUserId($telegram_user_id)->update(['utc_offset' => $utcOffset]);
+            User::whereUserId($telegram_user_id)->update(['utc_offset' => $utcOffset]);
             $bot->close();
         });
     }

@@ -9,7 +9,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
 /**
- * @method static whereTelegramUserId(int $user_id)
+ * @method static whereUserId(int $user_id)
  * @method static create(array $array)
  */
 class User extends Authenticatable
@@ -17,7 +17,7 @@ class User extends Authenticatable
     use HasApiTokens, HasFactory, Notifiable;
 
     protected $fillable = [
-        'telegram_user_id',
+        'user_id',
         'firstname',
         'username',
         'lastname',
