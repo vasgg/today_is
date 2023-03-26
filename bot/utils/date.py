@@ -1,8 +1,8 @@
-from datetime import datetime
 from calendar import monthrange
+from datetime import datetime
 
 
-class DateObj:
+class DateObjects:
     today = datetime.now()
     current_year = datetime.now().year
     current_month = datetime.now().month

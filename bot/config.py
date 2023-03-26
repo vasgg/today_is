@@ -7,12 +7,13 @@ from loguru import logger
 
 load_dotenv()
 
-BOT_TOKEN = os.getenv("BOT_TOKEN")
+token = os.getenv("BOT_TOKEN")
 admin = int(os.getenv("ADMIN_ID"))
-GEONAME = os.getenv('GEONAME')
-logger.add('../debug.log', format='{time} {level} {message}', level='DEBUG', retention='30 days', enqueue=True)
-bot = Bot(token=BOT_TOKEN, parse_mode=types.ParseMode.HTML)
+geoname = os.getenv('GEONAME')
+bot = Bot(token=token, parse_mode=types.ParseMode.HTML)
 dp = Dispatcher(bot)
 
+logger.add('../debug.log', format='{time} {level} {message}', level='DEBUG', retention='30 days', enqueue=True)
+geo_string = 'http://'+'api.geonames.org/timezoneJSON?lat={}&lng={}&username={}'
 db_string = f"postgresql+psycopg2://{os.getenv('POSTGRES_USER')}:{os.getenv('POSTGRES_PASSWORD')}@0.0.0.0:5432/{os.getenv('POSTGRES_DB')}"
 
