@@ -1,22 +1,9 @@
-from aiogram import executor, Dispatcher
+from aiogram import executor
 from handlers import dp
-from config import admin
+from middleware import AuthMiddleware
 
-
-async def on_shutdown_notify(dp: Dispatcher):
-    try:
-        await dp.bot.send_message(admin, 'Bot shutdown')
-    except Exception as err:
-        logger.debug("'{}' is fatal error", err)
-
-
-async def on_startup_notify(dp: Dispatcher):
-    try:
-        await dp.bot.send_message(admin, 'Bot started')
-    except Exception as err:
-        logger.debug("'{}' is fatal error", err)
-
-
+from bot.utils.notify_admin import on_shutdown_notify
 
 if __name__ == '__main__':
-    executor.start_polling(dp, on_startup=on_startup_notify, on_shutdown=on_shutdown_notify)
+    dp.middleware.setup(AuthMiddleware())
+    executor.start_polling(dp, on_shutdown=on_shutdown_notify)

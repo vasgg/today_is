@@ -1,18 +1,12 @@
 from aiogram import types
-from bot.config import dp
 from aiogram.dispatcher.filters import Command
-from bot.utils.date import DateObj
+from bot.utils.keyboards import records_button
 
-
-today_is_text = (f'<b>Today is:</>\n'
-                 f'\n'
-                 f'{DateObj.dayofweek}, {DateObj.dayofmonth} {DateObj.month} (month progress: {DateObj.monthprogress}%)\n'
-                 f'Day #{DateObj.dayofyear} of {DateObj.year} (year progress: {DateObj.yearprogress}%)\n'
-                 f'Week #{DateObj.numberofweeks}\n')
+from bot.config import dp
+from bot.utils.times import DateObjects
 
 
 @dp.message_handler(Command('today_is'))
-async def today_is(message: types.Message):
+async def today_is_command(message: types.Message):
     await dp.bot.send_message(chat_id=message.from_user.id,
-                              text=today_is_text)
-
+                              text=DateObjects.today_is_reply)

@@ -23,7 +23,5 @@ class Record(SQLModel, table=True):
     id: int = Field(primary_key=True, unique=True)
     user_id: int = Field(foreign_key='users.user_id')
     created_at: datetime
-    updated_at: datetime
     event_name: str = Field(4096)
     event_date: datetime
-
