@@ -6,3 +6,6 @@ class States(StatesGroup):
     Calculator = State()
     First_date = State()
     Second_date = State()
+    Event_name = State()
+    Event_date = State()
+    Delete_record = State()

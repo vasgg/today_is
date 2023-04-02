@@ -8,7 +8,7 @@ from loguru import logger
 load_dotenv()
 
 token = os.getenv("BOT_TOKEN")
-admin = int(os.getenv("ADMIN_ID"))
+admin = os.getenv("ADMIN_ID")
 geoname = os.getenv('GEONAME')
 pguser = os.getenv('POSTGRES_USER')
 pgpassword = os.getenv('POSTGRES_PASSWORD')
@@ -18,6 +18,6 @@ bot = Bot(token=token, parse_mode=types.ParseMode.HTML)
 storage = MemoryStorage()
 dp = Dispatcher(bot, storage=storage)
 
-logger.add('../debug.log', format='{time} {level} {message}', level='DEBUG', retention='30 days', enqueue=True)
+logger.add('debug.log', format='{time} {level} {message}', level='DEBUG', retention='30 days', enqueue=True)
 geo_string = 'http://' + 'api.geonames.org/timezoneJSON?lat={}&lng={}&username={}'
 db_string = f"postgresql+psycopg2://{pguser}:{pgpassword}@0.0.0.0:5432/{pgdb}"

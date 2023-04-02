@@ -1,13 +1,14 @@
-from aiogram.dispatcher.filters.builtin import Command
-from bot.utils.keyboards import tools
 from datetime import datetime
-from loguru import logger
+
 import dateutil.parser
-from aiogram.dispatcher import FSMContext
 from aiogram import types
-from bot.utils.states import States
-from bot.config import dp
+from aiogram.dispatcher import FSMContext
+from aiogram.dispatcher.filters.builtin import Command
+
+from bot.config import dp, logger
 from bot.replies import answer
+from bot.utils.keyboards import tools
+from bot.utils.states import States
 
 
 @dp.message_handler(Command("tools"))
@@ -45,12 +46,8 @@ async def counter_input(message: types.Message, state: FSMContext):
             await message.answer(f'{int(period.days) + 1} days left until your event')
         await state.reset_state(with_data=False)
     except ValueError:
-        await message.answer(f'Please, enter correct value. For example:\n'
-                             f'\n'
-                             f'<b>20 April 2000</> or <b>4.20.2000</>\n'
-                             f'\n'
-                             f'<b>/help</> for more info\n')
-        logger.debug("Entered string '{}' is not good for date parsing", message.text)
+        await message.answer(answer['value_error_reply'])
+        logger.debug(answer['value_error_log'], message.from_user.id, e, message.text)
 
 
 @dp.message_handler(state=States.First_date)
@@ -64,13 +61,9 @@ async def calculator_input_first(message: types.Message, state: FSMContext):
                              f'\n'
                              f'<i>read more about supported formats in /help section.</>\n')
         await States.Second_date.set()
-    except ValueError:
-        await message.answer(f'Please, enter correct value. For example:\n'
-                             f'\n'
-                             f'<b>20 April 2000</> or <b>4.20.2000</>\n'
-                             f'\n'
-                             f'<b>/help</> for more info\n')
-        logger.debug("Entered string '{}' is not good for date parsing", message.text)
+    except ValueError as e:
+        await message.answer(answer['value_error_reply'])
+        logger.debug(answer['value_error_log'], message.from_user.id, e, message.text)
 
 
 @dp.message_handler(state=States.Second_date)
@@ -91,9 +84,5 @@ async def calculator_input_second(message: types.Message, state: FSMContext):
             await message.answer(f'{period.days} days between the dates')
         await state.reset_state(with_data=False)
     except ValueError:
-        await message.answer(f'Please, enter correct value. For example:\n'
-                             f'\n'
-                             f'<b>20 April 2000</> or <b>4.20.2000</>\n'
-                             f'\n'
-                             f'<b>/help</> for more info\n')
-        logger.debug("Entered string '{}' is not good for date parsing", message.text)
+        await message.answer(answer['value_error_reply'])
+        logger.debug(answer['value_error_log'], message.from_user.id, e, message.text)
