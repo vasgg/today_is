@@ -1,4 +1,5 @@
 import os
+import redis
 
 from aiogram import Bot, Dispatcher, types
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
@@ -17,6 +18,7 @@ pgdb = os.getenv('POSTGRES_DB')
 bot = Bot(token=token, parse_mode=types.ParseMode.HTML)
 storage = MemoryStorage()
 dp = Dispatcher(bot, storage=storage)
+redis = redis.Redis(host='localhost', port=6379, decode_responses=True)
 
 logger.add('debug.log', format='{time} {level} {message}', level='DEBUG', retention='30 days', enqueue=True)
 geo_string = 'http://' + 'api.geonames.org/timezoneJSON?lat={}&lng={}&username={}'

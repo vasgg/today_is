@@ -25,7 +25,7 @@ async def days_operations(call: types.CallbackQuery):
 
     if call.data == 'date_calculator':
         await States.First_date.set()
-        await call.message.answer(text=answer['date_calculator_reply'])
+        await call.message.answer(text=answer['date_calculator_first_reply'])
         await call.answer()
 
 
@@ -45,7 +45,7 @@ async def counter_input(message: types.Message, state: FSMContext):
             period = date1 - now
             await message.answer(f'{int(period.days) + 1} days left until your event')
         await state.reset_state(with_data=False)
-    except ValueError:
+    except ValueError as e:
         await message.answer(answer['value_error_reply'])
         logger.debug(answer['value_error_log'], message.from_user.id, e, message.text)
 
@@ -56,10 +56,7 @@ async def calculator_input_first(message: types.Message, state: FSMContext):
     try:
         date1 = dateutil.parser.parse(first_date, dayfirst=True)
         await state.update_data(input1=date1)
-        await message.answer(f'Enter the second date:\n'
-                             f'\n'
-                             f'\n'
-                             f'<i>read more about supported formats in /help section.</>\n')
+        await message.answer(text=answer['date_calculator_second_reply'])
         await States.Second_date.set()
     except ValueError as e:
         await message.answer(answer['value_error_reply'])
@@ -83,6 +80,6 @@ async def calculator_input_second(message: types.Message, state: FSMContext):
             period = date1 - date2
             await message.answer(f'{period.days} days between the dates')
         await state.reset_state(with_data=False)
-    except ValueError:
+    except ValueError as e:
         await message.answer(answer['value_error_reply'])
         logger.debug(answer['value_error_log'], message.from_user.id, e, message.text)
