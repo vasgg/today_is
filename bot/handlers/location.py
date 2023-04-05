@@ -26,7 +26,8 @@ async def handle_location(message: types.Message):
         (latitude, longitude, sunrise, sunset, countryName, countryCode, timezoneId, utcOffset)
     await message.answer(reply, reply_markup=types.ReplyKeyboardRemove())
 
-    statement = update(User).where(User.user_id == message.from_user.id).values(utc_offset=utcOffset, updated_at=datetime.utcnow())
-    session.execute(statement)
+    update_timezone_stmt = update(User).where(User.user_id == message.from_user.id).values(utc_offset=utcOffset,
+                                                                                           updated_at=datetime.utcnow())
+    session.execute(update_timezone_stmt)
     session.commit()
     session.close()
