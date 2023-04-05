@@ -20,5 +20,6 @@ class DateObjects:
     month_progress = round(int(day_of_month) / monthrange(current_year, current_month)[1] * 100)
     number_of_week = Week.thisweek().week
     number_of_weeks = str(Week.last_week_of_year(current_year))[-2:]
-    today_is_reply = answer['today_is_reply'].format(day_of_week, day_of_month, month_name, month_progress, day_of_year, days_of_year,
-                                                     current_year, year_progress, number_of_week, number_of_weeks)
+    today_is_reply = answer['today_is_reply'].format(day_of_week, month_name, day_of_month, day_of_year, days_of_year, number_of_week,
+                                                     number_of_weeks, month_progress,
+                                                     current_year, year_progress)
