@@ -18,6 +18,5 @@ async def start_command(message: types.Message):
     else:
         now = datetime.utcnow() + timedelta(hours=offset)
     back = now - user.created_at
-    print(back)
     reply = answer['start_reply'].format(message.from_user.full_name, user.id, user.created_at.strftime("%d %B %Y"), back.days)
     await dp.bot.send_message(chat_id=message.from_user.id, text=reply)
