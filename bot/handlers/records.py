@@ -14,12 +14,6 @@ from bot.utils.states import States
 from datetime import datetime, timedelta
 
 
-def records_counter(user_id: int) -> int:
-    query = session.query(Record).filter(Record.user_id == user_id)
-    count = query.count()
-    return count
-
-
 def all_records_reply(user_id: int) -> str:
     all_records_query = session.query(Record).filter(Record.user_id == user_id)
     all_records = session.execute(all_records_query)
@@ -45,8 +39,8 @@ def all_records_reply(user_id: int) -> str:
 
         days_counter = now - event.event_date
         event_number += 1
-        row = f"{event_number}. {event.event_name}{ans}\n"
-        all_records_reply += row
+        event_row = f"{event_number}. {event.event_name}{ans}\n"
+        all_records_reply += event_row
     return all_records_reply
 
 
@@ -104,11 +98,13 @@ async def date_input(message: types.Message, state: FSMContext):
 async def delete_record(call: types.CallbackQuery):
     query = session.query(Record).filter(Record.user_id == call.from_user.id)
     count = query.count()
-    kb = ReplyKeyboardMarkup(row_width=4, one_time_keyboard=True, input_field_placeholder="", resize_keyboard=True)
+    kb = ReplyKeyboardMarkup(row_width=4, one_time_keyboard=True, input_field_placeholder="For delete record press the button bellow",
+                             resize_keyboard=True)
     [kb.insert(KeyboardButton(text=f'{record}')) for record in range(1, count + 1)]
     [kb.insert(KeyboardButton(text='cancel', callback_data='cancel'))]
     await dp.bot.send_message(chat_id=call.from_user.id,
-                              text=answer["event_delete_reply"], reply_markup=kb)
+                              text=answer["event_delete_reply"],
+                              reply_markup=kb)
     await States.Delete_record.set()
 
 
@@ -124,7 +120,7 @@ async def date_input(message: types.Message, state: FSMContext):
     record_number = int(message.text)
     db_record = session.query(Record.user_id).filter(Record.user_id == message.from_user.id)
     user_records = session.query(Record).filter(Record.user_id == message.from_user.id).all()
-    selected_record = user_records[user_records - 1]
+    selected_record = user_records[record_number - 1]
     session.delete(selected_record)
     session.commit()
     session.close()

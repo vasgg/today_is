@@ -33,7 +33,12 @@ async def days_operations(call: types.CallbackQuery):
 async def counter_input(message: types.Message, state: FSMContext):
     await States.Counter.set()
     date_for_count = message.text
-    now = datetime.now()
+    user = session.query(User).filter(User.user_id == message.from_user.id).scalar()
+    offset = user.utc_offset
+    if not offset:
+        now = datetime.utcnow()
+    else:
+        now = datetime.utcnow() + timedelta(hours=offset)
     try:
         date1 = dateutil.parser.parse(date_for_count, dayfirst=True)
         period = now - date1
