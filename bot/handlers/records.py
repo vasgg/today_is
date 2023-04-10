@@ -105,7 +105,6 @@ async def delete_record(call: types.CallbackQuery):
     await dp.bot.send_message(chat_id=call.from_user.id,
                               text=answer["event_delete_reply"],
                               reply_markup=kb)
-    types.ReplyKeyboardRemove()
     await States.Delete_record.set()
 
 
