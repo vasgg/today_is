@@ -32,6 +32,7 @@ answer = {
     "event_name_reply": "Enter name of your event: ",
     "event_date_reply": "Enter date of your event: ",
     "event_delete_reply": "To delete the record, press the button bellow",
+    "event_delete_placeholder": "Choose event to delete",
     "settings_reply": "In this section you can change you timezone settings by providing your "
                       "current location. Also you get additional date and time information. "
                       "You can push the button bellow, or send location to bot whenever you want.",

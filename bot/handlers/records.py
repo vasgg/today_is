@@ -98,13 +98,14 @@ async def date_input(message: types.Message, state: FSMContext):
 async def delete_record(call: types.CallbackQuery):
     query = session.query(Record).filter(Record.user_id == call.from_user.id)
     count = query.count()
-    kb = ReplyKeyboardMarkup(row_width=4, one_time_keyboard=True, input_field_placeholder="For delete record press the button bellow",
+    kb = ReplyKeyboardMarkup(row_width=4, one_time_keyboard=True, input_field_placeholder=answer["event_delete_placeholder"],
                              resize_keyboard=True)
     [kb.insert(KeyboardButton(text=f'{record}')) for record in range(1, count + 1)]
     [kb.insert(KeyboardButton(text='cancel', callback_data='cancel'))]
     await dp.bot.send_message(chat_id=call.from_user.id,
                               text=answer["event_delete_reply"],
                               reply_markup=kb)
+    types.ReplyKeyboardRemove()
     await States.Delete_record.set()
 
 
@@ -112,7 +113,7 @@ async def delete_record(call: types.CallbackQuery):
 async def delete_record(call: types.CallbackQuery, state: FSMContext):
     await state.reset_state(with_data=False)
     await dp.bot.send_message(chat_id=call.from_user.id,
-                              text=all_records_reply(call.from_user.id))
+                              text=all_records_reply(call.from_user.id), reply_markup=add_and_delete_keyboard)
 
 
 @dp.message_handler(state=States.Delete_record)
