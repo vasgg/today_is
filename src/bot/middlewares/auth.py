@@ -14,6 +14,8 @@ class AuthMiddleware(BaseMiddleware):
         data: Dict[str, Any],
     ) -> Any:
         db_session = data["db_session"]
+        if not event.from_user:
+            return None
         user = await get_user_from_db_by_tg_id(event.from_user.id, db_session)
         if not user:
             user = await add_user_to_db(event.from_user, db_session)
