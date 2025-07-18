@@ -1,5 +1,16 @@
+from calendar import isleap, monthrange
 from datetime import UTC, datetime, timedelta
-from database.models import Record
+import logging
+
+from aiogram.types import Message
+from httpx import Client
+from isoweek import Week
+
+from bot.config import Settings
+from bot.internal.replies import answer
+from database.models import Record, User
+
+logger = logging.getLogger(__name__)
 
 
 def get_date_suffix(user_offset: int | None, record: Record) -> str:
@@ -29,3 +40,54 @@ def compose_all_records_reply(user_offset: int | None, records: list[Record]) ->
         event_row = f"<b>{i}</b>. {record.event_name}{suffix}\n"
         all_records_reply += event_row
     return all_records_reply
+
+
+def compose_today_is_message(today: datetime) -> str:
+    current_year = datetime.now().year
+    current_month = datetime.now().month
+    days_of_year = 366 if isleap(current_year) else 365
+    month_name = today.strftime("%B")
+    day_of_week = today.strftime("%A")
+    day_of_month = today.strftime("%d")
+    day_of_year = today.strftime("%j")
+    year_progress = round(int(day_of_year) / days_of_year * 100)
+    month_progress = round(int(day_of_month) / monthrange(current_year, current_month)[1] * 100)
+    number_of_week = Week.thisweek().week
+    number_of_weeks = str(Week.last_week_of_year(current_year))[-2:]
+    today_is_reply = answer["today_is_reply"].format(
+        day_of_week,
+        month_name,
+        day_of_month,
+        day_of_year,
+        days_of_year,
+        number_of_week,
+        number_of_weeks,
+        month_progress,
+        current_year,
+        year_progress,
+    )
+    return today_is_reply
+
+
+async def get_location_reply_with_offset(message: Message, settings: Settings):
+    latitude = message.location.latitude
+    longitude = message.location.longitude
+    geoname_string = settings.bot.geostring.get_secret_value().format(latitude, longitude, settings.bot.geoname)
+    with Client() as client:
+        try:
+            response = client.get(geoname_string)
+            response.raise_for_status()
+            data = response.json()
+            country_code = data.get("countryCode")
+            utc_offset = data.get("gmtOffset")
+            timezone_id = data.get("timezoneId")
+            country_name = data.get("countryName")
+            sunrise = data.get("sunrise")
+            sunset = data.get("sunset")
+        except Exception as e:
+            logger.error(f"Failed to get location: {e}")
+            return answer["geodata_error"]
+    reply = answer["location_reply"].format(
+        latitude, longitude, sunrise, sunset, country_name, country_code, timezone_id, utc_offset
+    )
+    return reply, utc_offset
