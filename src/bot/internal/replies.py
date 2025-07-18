@@ -52,9 +52,9 @@ answer = {
         "but you can update the timezone by sending your current location "
         "(working only from smartphone) or click the button in <b>/settings</b> menu.\n"
         "\n"
-        "Additional date functions under development,\n"
-        "however, they are available in the <b>/tools</b> section.\n"
-        "\n"
+        # "Additional date functions under development,\n"
+        # "however, they are available in the <b>/tools</b> section.\n"
+        # "\n"
         "<i>With any questions, suggestions or feedback\n"
         "please contact <b>@vas1stdas</b>.</i>\n"
     ),
