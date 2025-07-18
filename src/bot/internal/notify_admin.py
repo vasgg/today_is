@@ -36,6 +36,6 @@ async def on_shutdown(bot: Bot, settings: Settings) -> None:
     folder = get_folder_name()
     await notify_admin(
         bot,
-        settings.bot.ADMINS[0],
+        settings.bot.admin,
         f"<b>{folder} shutdown</b>",
     )
