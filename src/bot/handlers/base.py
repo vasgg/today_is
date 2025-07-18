@@ -34,7 +34,7 @@ async def start_message(message: Message, user: User) -> None:
 @router.message(Command("info"))
 async def info_command(message: Message):
     await message.answer(
-        text=answer["help_reply"],
+        text=answer["info_reply"],
     )
 
 

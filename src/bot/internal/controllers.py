@@ -62,6 +62,7 @@ def compose_today_is_message(today: datetime) -> str:
         days_of_year,
         number_of_week,
         number_of_weeks,
+        month_name,
         month_progress,
         current_year,
         year_progress,

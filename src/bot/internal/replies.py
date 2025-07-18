@@ -15,19 +15,18 @@ answer = {
         "Greetings, {}.\n"
         "Registration date: {}, {} days ago\n"
         "\n"
-        "Let's begin with <b>/today_is</> command.\n\n"
-        "For more info check the <b>/help</> section.\n"
+        "Let's begin with <b>/today_is</b> command.\n\n"
+        "For more info check the <b>/info</b> section.\n"
     ),
     "records_reply_unregistered": "For adding your first event push the button bellow",
     "today_is_reply": (
-        "Today is:\n\n"
-        "{}, {}, {}\n"
-        "Day {}/{}\n"
-        "Week {}/{}\n"
-        "Month progress: {}%\n"
-        "{} progress: {}%\n"
-        "\n"
-        "For managing your events use command <b>/records</>"
+        "<b>Today is:</b>\n\n"
+        "{}, {}, <b>{}</b>\n"
+        "Day <b>{}</b>/<b>{}</b>\n"
+        "Week <b>{}</b>/<b>{}</b>\n"
+        "<b>{}</b> progress: <b>{}%</b>\n"
+        "<b>{}</b> progress: <b>{}%</b>\n\n"
+        "For managing your events use <b>/records</> command"
     ),
     "location_reply": (
         "Geo data recieved. Here's some info:\n\n"
@@ -38,7 +37,15 @@ answer = {
     "value_error_log": "User [{}] get error [{}] with data [{}]",
     "value_error_reply": "Please enter correct value. For example: 20.04.2000 or 20 Apr 2000",
     "event_name_reply": "Enter name of your event: ",
-    "event_date_reply": "Enter date of your event: ",
+    "event_date_reply": (
+        "Enter date of your event\n\n"
+        "<i>examples:\n"
+        "- 20.07.2025\n"
+        "- 20/07/2025\n"
+        "- 20-07-2025\n"
+        "- 20 July 2025\n"
+        "- 20 Jul 2025</i>\n"
+    ),
     "event_delete_confirm": "Are you sure you want to delete this record?\n\n<b>{}</b> | {}",
     "event_delete_reply": "To delete the record, press the button bellow",
     "event_delete_placeholder": "Choose event to delete",
@@ -47,11 +54,10 @@ answer = {
         "current location. Also you get additional date and time information. "
         "You can push the button bellow, or send location to bot whenever you want."
     ),
-    "help_reply": (
+    "info_reply": (
         "By default this bot uses UTC timezone (London time),\n"
         "but you can update the timezone by sending your current location "
-        "(working only from smartphone) or click the button in <b>/settings</b> menu.\n"
-        "\n"
+        "(working only from smartphone) or click the button in <b>/settings</b> menu.\n\n"
         # "Additional date functions under development,\n"
         # "however, they are available in the <b>/tools</b> section.\n"
         # "\n"
