@@ -56,7 +56,7 @@ def get_date_suffix(user_offset: int | None, record: Record) -> str:
         suffix = f" in <b>{days_left}</b> {day_word}"
         detail = get_period_detail(now, record.event_date)
         if detail:
-            suffix += f"\n    <i>({detail})</i>"
+            suffix += f"\n    <i>[{detail}]</i>"
     return suffix
 
 
