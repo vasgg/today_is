@@ -2,6 +2,8 @@ from calendar import isleap, monthrange
 from datetime import UTC, datetime, timedelta
 import logging
 
+from dateutil.relativedelta import relativedelta
+
 from aiogram.types import Message
 from httpx import Client
 from isoweek import Week
@@ -11,6 +13,22 @@ from bot.internal.replies import answer
 from database.models import Record, User
 
 logger = logging.getLogger(__name__)
+
+
+def get_period_detail(earlier: datetime, later: datetime) -> str:
+    rd = relativedelta(later, earlier)
+    if rd.years == 0 and rd.months == 0:
+        return ""
+    parts = []
+    if rd.years > 0:
+        parts.append(f"<b>{rd.years}</b> yr.")
+    if rd.months > 0:
+        parts.append(f"<b>{rd.months}</b> mo.")
+    if rd.days > 0:
+        parts.append(f"<b>{rd.days}</b> d.")
+    if len(parts) >= 2:
+        return ", ".join(parts[:-1]) + " and " + parts[-1]
+    return parts[0]
 
 
 def get_date_suffix(user_offset: int | None, record: Record) -> str:
@@ -26,10 +44,19 @@ def get_date_suffix(user_offset: int | None, record: Record) -> str:
         suffix = " <b>today</b>"
     elif now > record.event_date:
         period = now - record.event_date
-        suffix = f" <b>{period.days}</b> days ago"
+        day_word = "day" if period.days == 1 else "days"
+        suffix = f" <b>{period.days}</b> {day_word} ago"
+        detail = get_period_detail(record.event_date, now)
+        if detail:
+            suffix += f"\n    <i>({detail})</i>"
     else:
         period = record.event_date - now
-        suffix = f" in <b>{period.days + 1}</b> days"
+        days_left = period.days + 1
+        day_word = "day" if days_left == 1 else "days"
+        suffix = f" in <b>{days_left}</b> {day_word}"
+        detail = get_period_detail(now, record.event_date)
+        if detail:
+            suffix += f"\n    <i>({detail})</i>"
     return suffix
 
 
