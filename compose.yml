@@ -8,7 +8,9 @@ services:
     ports:
       - "127.0.0.1:5446:5432"
     volumes:
-      - pg_data:/var/lib/postgresql/data
+      - today_is_pg_data:/data
 
 volumes:
-  pg_data:
+  today_is_pg_data:
+    external: true
+
