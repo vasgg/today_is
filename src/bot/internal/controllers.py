@@ -79,7 +79,7 @@ def compose_all_records_reply(user_offset: int | None, records: list[Record]) ->
     for i, record in enumerate(records, start=1):
         event_date = format_event_date_markup(user_offset, record.event_date)
         suffix = get_date_suffix(user_offset, record)
-        event_row = f"<b>{i}</b>. {record.event_name} &mdash; {event_date}\n    {suffix}\n"
+        event_row = f"<b>{i}</b>. {record.event_name} — {event_date}\n    {suffix}\n"
         all_records_reply += event_row
     return all_records_reply
 
