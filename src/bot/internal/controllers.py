@@ -1,5 +1,5 @@
 from calendar import isleap, monthrange
-from datetime import UTC, datetime, timedelta
+from datetime import UTC, datetime, timedelta, timezone
 import logging
 
 from dateutil.relativedelta import relativedelta
@@ -31,6 +31,20 @@ def get_period_detail(earlier: datetime, later: datetime) -> str:
     return parts[0]
 
 
+def get_event_date(user_offset: int | None, event_date: datetime) -> str:
+    if event_date.tzinfo is None:
+        return event_date.strftime("%d.%m.%Y")
+    if user_offset is None:
+        return event_date.astimezone(UTC).strftime("%d.%m.%Y")
+    user_timezone = timezone(timedelta(hours=user_offset))
+    return event_date.astimezone(user_timezone).strftime("%d.%m.%Y")
+
+
+def format_event_date_markup(user_offset: int | None, event_date: datetime) -> str:
+    date_parts = get_event_date(user_offset, event_date).split(".")
+    return ".".join(f"<b>{part}</b>" for part in date_parts)
+
+
 def get_date_suffix(user_offset: int | None, record: Record) -> str:
     if not user_offset:
         now = datetime.now(UTC)
@@ -41,30 +55,31 @@ def get_date_suffix(user_offset: int | None, record: Record) -> str:
         and now.month == record.event_date.month
         and now.year == record.event_date.year
     ):
-        suffix = " <b>today</b>"
+        suffix = "<b>today</b>"
     elif now > record.event_date:
         period = now - record.event_date
         day_word = "day" if period.days == 1 else "days"
-        suffix = f" <b>{period.days}</b> {day_word} ago"
+        suffix = f"<b>{period.days}</b> {day_word} ago"
         detail = get_period_detail(record.event_date, now)
         if detail:
-            suffix += f"\n    <i>[{detail}]</i>"
+            suffix += f" ['{detail}']"
     else:
         period = record.event_date - now
         days_left = period.days + 1
         day_word = "day" if days_left == 1 else "days"
-        suffix = f" in <b>{days_left}</b> {day_word}"
+        suffix = f"in <b>{days_left}</b> {day_word}"
         detail = get_period_detail(now, record.event_date)
         if detail:
-            suffix += f"\n    <i>[{detail}]</i>"
+            suffix += f" ['{detail}']"
     return suffix
 
 
 def compose_all_records_reply(user_offset: int | None, records: list[Record]) -> str:
     all_records_reply = ""
     for i, record in enumerate(records, start=1):
+        event_date = format_event_date_markup(user_offset, record.event_date)
         suffix = get_date_suffix(user_offset, record)
-        event_row = f"<b>{i}</b>. {record.event_name}{suffix}\n"
+        event_row = f"<b>{i}</b>. {record.event_name} &mdash; {event_date}\n    {suffix}\n"
         all_records_reply += event_row
     return all_records_reply
 
