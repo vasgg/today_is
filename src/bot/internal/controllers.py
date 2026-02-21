@@ -42,7 +42,7 @@ def get_event_date(user_offset: int | None, event_date: datetime) -> str:
 
 def format_event_date_markup(user_offset: int | None, event_date: datetime) -> str:
     date_parts = get_event_date(user_offset, event_date).split(".")
-    return ".".join(f"<b>{part}</b>" for part in date_parts)
+    return ".".join(f"{part}" for part in date_parts)
 
 
 def get_date_suffix(user_offset: int | None, record: Record) -> str:
@@ -62,7 +62,7 @@ def get_date_suffix(user_offset: int | None, record: Record) -> str:
         suffix = f"<b>{period.days}</b> {day_word} ago"
         detail = get_period_detail(record.event_date, now)
         if detail:
-            suffix += f"\n    <i>{detail}</i>"
+            suffix += f" — {detail}"
     else:
         period = record.event_date - now
         days_left = period.days + 1
@@ -70,7 +70,7 @@ def get_date_suffix(user_offset: int | None, record: Record) -> str:
         suffix = f"in <b>{days_left}</b> {day_word}"
         detail = get_period_detail(now, record.event_date)
         if detail:
-            suffix += f"\n    <i>{detail}</i>"
+            suffix += f" — {detail}"
     return suffix
 
 
@@ -79,7 +79,7 @@ def compose_all_records_reply(user_offset: int | None, records: list[Record]) ->
     for i, record in enumerate(records, start=1):
         event_date = format_event_date_markup(user_offset, record.event_date)
         suffix = get_date_suffix(user_offset, record)
-        event_row = f"<b>{i}</b>. {record.event_name} — {event_date}\n    {suffix}\n"
+        event_row = f"{i}. <b>{record.event_name}</b> — {event_date}\n    {suffix}\n"
         all_records_reply += event_row
     return all_records_reply
 
