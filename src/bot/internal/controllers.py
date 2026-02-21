@@ -21,11 +21,11 @@ def get_period_detail(earlier: datetime, later: datetime) -> str:
         return ""
     parts = []
     if rd.years > 0:
-        parts.append(f"<b>{rd.years}</b> yr.")
+        parts.append(f"<b>{rd.years}</b>y")
     if rd.months > 0:
-        parts.append(f"<b>{rd.months}</b> mo.")
+        parts.append(f"<b>{rd.months}</b>m")
     if rd.days > 0:
-        parts.append(f"<b>{rd.days}</b> d.")
+        parts.append(f"<b>{rd.days}</b>d")
     if len(parts) >= 2:
         return ", ".join(parts[:-1]) + " and " + parts[-1]
     return parts[0]
@@ -62,7 +62,7 @@ def get_date_suffix(user_offset: int | None, record: Record) -> str:
         suffix = f"<b>{period.days}</b> {day_word} ago"
         detail = get_period_detail(record.event_date, now)
         if detail:
-            suffix += f" — {detail}"
+            suffix += f" ({detail})"
     else:
         period = record.event_date - now
         days_left = period.days + 1
@@ -70,7 +70,7 @@ def get_date_suffix(user_offset: int | None, record: Record) -> str:
         suffix = f"in <b>{days_left}</b> {day_word}"
         detail = get_period_detail(now, record.event_date)
         if detail:
-            suffix += f" — {detail}"
+            suffix += f" ({detail})"
     return suffix
 
 
