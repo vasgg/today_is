@@ -85,8 +85,8 @@ def compose_all_records_reply(user_offset: int | None, records: list[Record]) ->
 
 
 def compose_today_is_message(today: datetime) -> str:
-    current_year = datetime.now().year
-    current_month = datetime.now().month
+    current_year = today.year
+    current_month = today.month
     days_of_year = 366 if isleap(current_year) else 365
     month_name = today.strftime("%B")
     day_of_week = today.strftime("%A")
@@ -94,7 +94,7 @@ def compose_today_is_message(today: datetime) -> str:
     day_of_year = today.strftime("%j")
     year_progress = round(int(day_of_year) / days_of_year * 100)
     month_progress = round(int(day_of_month) / monthrange(current_year, current_month)[1] * 100)
-    number_of_week = Week.thisweek().week
+    number_of_week = Week.withdate(today.date()).week
     number_of_weeks = str(Week.last_week_of_year(current_year))[-2:]
     today_is_reply = answer["today_is_reply"].format(
         day_of_week,
