@@ -1,3 +1,4 @@
+from aiogram.enums import ButtonStyle
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, ReplyKeyboardMarkup, KeyboardButton
 from aiogram.utils.keyboard import InlineKeyboardBuilder, ReplyKeyboardBuilder
 
@@ -33,7 +34,9 @@ def add_record_kb(with_delete: bool = False) -> InlineKeyboardMarkup:
     kb = InlineKeyboardBuilder()
     kb.add(
         InlineKeyboardButton(
-            text="add record", callback_data=RecordActionCallbackFactory(action=RecordAction.ADD_RECORD).pack()
+            text="add record",
+            callback_data=RecordActionCallbackFactory(action=RecordAction.ADD_RECORD).pack(),
+            style=ButtonStyle.PRIMARY,
         )
     )
     if with_delete:
@@ -41,6 +44,7 @@ def add_record_kb(with_delete: bool = False) -> InlineKeyboardMarkup:
             InlineKeyboardButton(
                 text="delete record",
                 callback_data=RecordActionCallbackFactory(action=RecordAction.DELETE_RECORD).pack(),
+                style=ButtonStyle.DANGER,
             )
         )
     return kb.as_markup()
@@ -51,10 +55,17 @@ def delete_record_kb(records: list[Record]) -> InlineKeyboardMarkup:
     kb = InlineKeyboardBuilder()
     for i, record in enumerate(records, start=1):
         kb.add(
-            InlineKeyboardButton(text=f"{i}", callback_data=ChooseRecordCallbackFactory(record_id=record.id).pack())
+            InlineKeyboardButton(
+                text=f"{i}",
+                callback_data=ChooseRecordCallbackFactory(record_id=record.id).pack(),
+                style=ButtonStyle.DANGER,
+            )
         )
     kb.add(
-        InlineKeyboardButton(text="cancel", callback_data=MenuActionsCallbackFactory(action=MenuAction.CANCEL).pack())
+        InlineKeyboardButton(
+            text="cancel",
+            callback_data=MenuActionsCallbackFactory(action=MenuAction.CANCEL).pack(),
+            style=ButtonStyle.PRIMARY,)
     )
     kb.adjust(*([4] * (count // 4)) + ([count % 4] if count % 4 else []), 1)
     return kb.as_markup()
@@ -62,8 +73,17 @@ def delete_record_kb(records: list[Record]) -> InlineKeyboardMarkup:
 
 def delete_record_confirm_kb(record_id: int) -> InlineKeyboardMarkup:
     kb = InlineKeyboardBuilder()
-    kb.add(InlineKeyboardButton(text="yes", callback_data=DeleteRecordCallbackFactory(record_id=record_id).pack()))
     kb.add(
-        InlineKeyboardButton(text="no", callback_data=MenuSectionCallbackFactory(section=MenuSection.RECORDS).pack())
+        InlineKeyboardButton(
+            text="no",
+            callback_data=MenuSectionCallbackFactory(section=MenuSection.RECORDS).pack(),
+            style=ButtonStyle.PRIMARY,
+        )
+    )
+    kb.add(InlineKeyboardButton(
+        text="yes",
+        callback_data=DeleteRecordCallbackFactory(record_id=record_id).pack(),
+        style=ButtonStyle.DANGER,
+        )
     )
     return kb.as_markup()
